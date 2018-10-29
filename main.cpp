@@ -2,6 +2,8 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <ctime>
+#include <algorithm>
 
 std::vector<std::string> presidentList;
 int a, b, c, best;
@@ -46,7 +48,6 @@ void saveData() {
     out << "best=" << best << std::endl;
     out.flush();
     out.close();
-    std::cout << "Found a new best: " << best << std::endl;
 }
 
 int hash(std::string str) {
@@ -62,7 +63,9 @@ int main() {
     srand (time(NULL));
     loadPresidentList();
     loadData();
+    int totalIterations = 0;
     while (true) {
+        ++totalIterations;
         a = rand() % 100000 + 1;
         b = rand() % 100000 + 1;
         c = rand() % 100000 + 1;
@@ -78,6 +81,8 @@ int main() {
         }
 
         if (uniques.size() > best) {
+            std::cout << "New best found: " << uniques.size() << std::endl;
+            std::cout << "Total iterations so far: " << totalIterations << std::endl << "---" << std::endl;
             best = uniques.size();
             saveData();
         }
