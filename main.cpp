@@ -2,6 +2,7 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <map>
 #include <ctime>
 #include <algorithm>
 
@@ -66,24 +67,21 @@ int main() {
     int totalIterations = 0;
     while (true) {
         ++totalIterations;
-        a = rand() % 100000 + 1;
-        b = rand() % 100000 + 1;
-        c = rand() % 100000 + 1;
-        std::vector<int> uniques;
+        a = rand() % 10000000 + 1;
+        b = rand() % 10000000 + 1;
+        c = rand() % 10000000 + 1;
+        std::map<int, int> uniques;
         for (auto &s : presidentList) {
             int index = hash(s);
-            if (std::find(uniques.begin(), uniques.end(), index) != uniques.end()) {
-                uniques.erase(std::remove(uniques.begin(), uniques.end(), index), uniques.end());
-                continue;
-            } else {
-                uniques.push_back(index);
-            }
+            uniques[index] += 1;
         }
-
-        if (uniques.size() > best) {
-            std::cout << "New best found: " << uniques.size() << std::endl;
+        int totalUniques = std::count_if(uniques.begin(), uniques.end(), [](const std::pair<int, int> &p) {
+            return p.second == 1;
+        });
+        if (totalUniques > best) {
+            std::cout << "New best found: " << totalUniques << std::endl;
             std::cout << "Total iterations so far: " << totalIterations << std::endl << "---" << std::endl;
-            best = uniques.size();
+            best = totalUniques;
             saveData();
         }
     }
